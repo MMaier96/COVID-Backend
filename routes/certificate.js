@@ -8,89 +8,76 @@ const HummusRecipe = require('hummus-recipe');
 
 /* https://ethereal.email/ */
 
-/* Post certificate listing. */
 router.post('/', async (request, response) => {
-  var html = fs.readFileSync("certificate-template.html", "utf8");
 
-  var options = {
+  console.log(`[Info] New request received with content: \n${JSON.stringify(request.body)}`);
+
+  const configuration = fs.readFileSync("configuration.json", "utf8");
+  const html = fs.readFileSync("template/certificate-template.html", "utf8");
+
+  const htmlData = { ...request.body, "Oranisation": JSON.parse(configuration).Oranisation};
+
+  const options = {
     format: "A4",
     orientation: "portrait",
     border: "10mm",
   };
 
-  var users = [
-    {
-      name: "Shyam",
-      age: "26",
-    },
-    {
-      name: "Navjot",
-      age: "26",
-    },
-    {
-      name: "Vitthal",
-      age: "26",
-    },
-  ];
-  var document = {
+  const document = {
     html: html,
-    data: {
-      users: users,
-    },
-    path: "./output.pdf",
+    data: htmlData,
+    path: `./certificates/created/${htmlData.testdatum}_${htmlData.nachname}-${htmlData.vorname}certificate.pdf`,
     type: "",
   };
 
-  pdf
-    .create(document, options)
+  pdf.create(document, options)
     .then((res) => {
-      console.log(res);
+
+      console.log(`\n[INFO]: Document was created!\n${JSON.stringify(res)}\n`);
+
+      const pdfDoc = new HummusRecipe(res.filename, 'output2.pdf');
+
+      pdfDoc
+        .encrypt({
+          userPassword: htmlData.Geburtstag,
+          ownerPassword: htmlData.Geburtstag,
+          userProtectionFlag: 4
+        })
+        .endPDF();
+
+      console.log(`\n[INFO]: Document was successfully encrypted!\noutput2.pdf\n`);
+
+      const transporter = nodemailer.createTransport({
+        host: "smtp.ethereal.email",
+        port: 587,
+        secure: false, // true for 465, false for other ports
+        auth: {
+          user: "laurie.towne99@ethereal.email", // dummy account
+          pass: "G9z9M8xa586ajrN171", // dummy account
+        },
+      });
+
+      console.log(`\n[INFO]: Mail transport was created!\n`);
+
+      transporter.sendMail({
+        from: '"Laurie Towne" <laurie.towne99@ethereal.email>', 
+        to: "testmail@gmail.com", 
+        subject: "Zertifikat", 
+        text: "test", 
+        attachments: [{
+          filename: 'Testergebnis_Zertifikat.pdf',
+          path: 'output2.pdf',
+          contentType: 'application/pdf'
+        }],
+        html: "test <b>Hello world?</b>", // html body
+      }).then(info => {
+        console.log(`\n[INFO]: Mail was sent!\n${JSON.stringify(info)}\n`);
+        response.send('works');
+      })
     })
     .catch((error) => {
       console.error(error);
     });
-
-    
-  const pdfDoc = new HummusRecipe('output.pdf', 'output2.pdf');
-
-  pdfDoc
-    .encrypt({
-        userPassword: '123',
-        ownerPassword: '123',
-        userProtectionFlag: 4
-    })
-    .endPDF();
-
-  /* send email */
-
-  // create reusable transporter object using the default SMTP transport
-  let transporter = nodemailer.createTransport({
-    host: "smtp.ethereal.email",
-    port: 587,
-    secure: false, // true for 465, false for other ports
-    auth: {
-      user: "laurie.towne99@ethereal.email",
-      pass: "G9z9M8xa586ajrN171",
-    },
-  });
-
-  let info = await transporter.sendMail({
-    from: '"Marcel Maier" <laurie.towne99@ethereal.email>', // sender address
-    to: "developing.mmaier96@gmail.com", // list of receivers
-    subject: "Zertifikat", // Subject line
-    text: "test", // plain text body
-    attachments: [{
-      filename: 'zertifikat.pdf',
-      path: 'output2.pdf',
-      contentType: 'application/pdf'
-    }],
-    html: "test <b>Hello world?</b>", // html body
-  });
-
-  console.log("Message sent: %s", info.messageId);
-
-  console.log(request.body);
-  response.send('works');
 });
 
 module.exports = router;

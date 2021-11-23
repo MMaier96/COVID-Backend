@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+    * {
+      font-family: 'Roboto', sans-serif;
+    }
+
+    #logo {
+      width: 100%;
+      text-align: right;
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 1.5em;
+    }
+
+    h2 {
+      text-align: left;
+      font-size: 1em;
+      font-weight: normal;
+    }
+
+    .transparent-box{
+      box-sizing: border-box;
+      border-radius: 5px;
+      display: flex;
+      width: 80%;
+      margin: 20px auto;
+    }
+    .disclaimer-box {
+      box-sizing: border-box;
+      border-radius: 5px;
+      display: flex;
+      width: 80%;
+      margin: 20px auto;
+      font-size: 0.65em;
+    }
+
+    .centered {
+      text-align: center;
+      font-family: 'Roboto', sans-serif;
+      font-size: 0.8em;
+    }
+
+    .box {
+      background: rgb(245, 245, 245);
+      box-sizing: border-box;
+      border-radius: 5px;
+      display: flex;
+      width: 80%;
+      margin: 20px auto;
+    }
+
+    table {
+      padding: 5px 10px;
+      width: 100%;
+      table-layout: fixed;
+      font-size: 0.8em;
+    }
+
+    td {
+      vertical-align: top;
+    }
+    td p {
+      margin: 0px;
+      padding: 0px;
+    }
+
+    .bold {
+      font-weight: 700;
+    }
+
+    .heigth-box{
+      width: 100%;
+      height: 70px;
+      text-align: center;
+      position: relative;
+    }
+    .heigth-box span {
+      position: absolute;
+      bottom: 0px;
+      left: 0px;
+    }
+    .spacer {
+      width: 100%;
+      height: 1px;
+      margin: 10px 0px;
+      border-top: 1px solid rgb(129, 129, 129);
+    }
+  </style>
+</head>
+
+<body>
+  <div id="logo">
+    <img src="http://localhost:3000/logo.jpg" height="75px" alt="">
+  </div>
+  <h1>Bescheinigung über das Testergebnis</h1>
+  <h1>Es wird das Vorliegen eines</h1>
+  {{#if this.Ergebnis}}
+  <p class="centered">
+    <input type="checkbox" name="negative-test">
+    <label for="negative-test">negativen Antigentests</label>
+  </p>
+  <p class="centered">
+    <input type="checkbox" checked name="positive-test">
+    <label for="positive-test">positiven Antigentests</label>
+  </p>
+  {{else}}
+  <p class="centered">
+    <input type="checkbox" checked name="negative-test">
+    <label for="negative-test">negativen Antigentests</label>
+  </p>
+  <p class="centered">
+    <input type="checkbox"  name="positive-test">
+    <label for="positive-test">positiven Antigentests</label>
+  </p>
+  {{/if}}
+
+  <h1>bescheinigt für:</h1>
+
+  <div class="box">
+    <table>
+      <tr>
+        <td>Name</td>
+        <td>Vorname</td>
+      </tr>
+      <tr>
+        <td class="bold">{{this.Nachname}}</td>
+        <td class="bold">{{this.Vorname}}</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="box">
+    <table>
+      <tr>
+        <td>Anschrift</td>
+        <td>Geburtsdatum</td>
+      </tr>
+      <tr>
+        <td class="bold">
+          <p>{{this.PLZ}} {{this.Wohnort}}</p>
+          <p>{{this.Straße}} {{this.Hausnummer}}</p>
+        </td>
+        <td class="bold">{{this.Geburtstag}}</td>
+      </tr>
+    </table>
+  </div>
+  <div class="transparent-box">
+    <h2>Der PoC-Antigentest auf SARS-CoV-2 wurde durchgeführt von:</h2>
+  </div>
+
+  <div class="box">
+    <table>
+      <tr>
+        <td>Name</td>
+        <td>Testnummer</td>
+      </tr>
+      <tr>
+        <td class="bold">{{this.Tester}}</td>
+        <td class="bold">{{this.Testnummer}}</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="box">
+    <table>
+      <tr>
+        <td>Name und Anschrift der durchführenden Firma</td>
+      </tr>
+      <tr>
+        <td class="bold">{{this.Oranisation}}</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="box">
+    <table>
+      <tr>
+        <td>Bezeichnung des verwendeten Antigentests</td>
+      </tr>
+      <tr>
+        <td class="bold">{{this.COVIDTestType}}</td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="transparent-box">
+    <table class="smaller">
+      <tr>
+        <td>
+          <div class="heigth-box">
+            <span>{{Testdatum}} um {{Testuhrzeit}}</span>
+          </div>
+          <div class="spacer"></div>
+          Testdatum / Uhrzeit
+        </td>
+        <td>
+          <div class="heigth-box">
+            <img src="http://localhost:3000/stempel.jpg" height="75px" alt="">
+          </div>
+          <div class="spacer"></div>
+          Unterschrift und Stempel
+        </td>
+      </tr>
+    </table>
+  </div>
+
+  <div class="disclaimer-box">
+    <p class="bold">Bitte beachten Sie:</p>
+    <p>
+      Bei Vorliegen eines positiven Testergebnisses auf SARS-CoV-2 begeben Sie sich bitte umgehend in häusliche Quarantäne und kontaktieren Sie zur weiteren Diagnostik und Behandlung telefonisch Ihren Hausarzt.
+    </p>
+    <p>
+      Bei Vorliegen eines negativen Testergebnisses auf SARS-CoV-2 halten Sie sich bitte weiterhin an die geltenden AHA-Regeln (Abstand halten - Hygiene beachten - Alltagsmaske tragen), da dieses Ergebnis nur eine Momentaufnahme darstellt und der Test keine 100%ige Sicherheit bietet.
+    </p>
+
+    <p>
+      Treten bei Ihnen typische Symptome einer COVID-19-Infektion auf, kontaktieren Sie bitte telefonisch Ihren Hausarzt oder außerhalb der Sprechzeiten den ärztlichen Bereitschaftsdienst unter 116 117. Bei Lebensgefahr, wie starker Atemnot, wenden Sie sich an die 112.
+    </p>
+  </div>
+</body>
+
+</html>

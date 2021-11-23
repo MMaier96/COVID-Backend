@@ -1,0 +1,17 @@
+{
+  "Oranisation": "Pflegedienst, Straße 12, 45685 Irgendwo",
+  "COVIDTestTypes": [
+    "Hotgen Biotech Coronavirus (2019-nCOV) - Antigentest -",
+    "Hotgen Novel Coronavirus (2019-nCOV) - Antigentest -",
+    "Acura Covid-19 Antigen Spucktest"
+  ],
+  "users": [
+    {
+      "username": "marcel",
+      "password": "e8b1e324a271d000006c601cb8a20ecf46d386f8bd186ed9777ae11d10018c67"
+    }, {
+      "username": "herbert",
+      "password": "e8b1e324a271d000006c601cb8a20ecf46d386f8bd186ed9777ae11d10018c67"
+    }
+  ]
+}
